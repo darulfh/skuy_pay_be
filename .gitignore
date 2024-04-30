@@ -1,0 +1,7 @@
+.air.toml
+tmp
+cover.out
+local.env
+dev.env
+main.go
+mail.html

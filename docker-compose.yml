@@ -1,0 +1,30 @@
+version: "3.9"
+volumes:
+  db:
+    driver: local
+services:
+  postgresdb:
+    image: postgres:15.3-alpine
+    restart: always
+    container_name: ppob-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: arby2002
+      POSTGRES_DB: db_ppob
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppob-app
+    ports:
+      - "2424:2424"
+    restart: always
+    volumes:
+      - ./:/rest-api
+    depends_on:
+      - postgresdb
