@@ -5,6 +5,10 @@ import (
 	"BE-Golang/database"
 	"BE-Golang/routes"
 	m "BE-Golang/usecase/middlewares"
+	"crypto/tls"
+	"fmt"
+	"log"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -32,16 +36,16 @@ func main() {
 	m.LogMiddlewares(e)
 
 	// ====== HTTPS ========
-	// httpsServer := &http.Server{
-	// 	Addr:      fmt.Sprintf(":%s", config.AppConfig.AppPort),
-	// 	Handler:   e,
-	// 	TLSConfig: &tls.Config{},
-	// }
+	httpsServer := &http.Server{
+		Addr:      fmt.Sprintf(":%s", config.AppConfig.AppPort),
+		Handler:   e,
+		TLSConfig: &tls.Config{},
+	}
 
-	// if err := httpsServer.ListenAndServeTLS("server.crt", "server.key"); err != http.ErrServerClosed {
-	// 	log.Fatal(err)
-	// }
+	if err := httpsServer.ListenAndServeTLS("server.crt", "server.key"); err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
 
 	// ====== HTTP ========
-	e.Logger.Fatal(e.Start(":" + config.AppConfig.AppPort))
+	// e.Logger.Fatal(e.Start(":" + config.AppConfig.AppPort))
 }
