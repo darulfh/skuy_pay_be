@@ -3,7 +3,6 @@ package balance
 import (
 	"BE-Golang/model"
 	"BE-Golang/repository"
-	"BE-Golang/usecase/mail"
 	"fmt"
 	"strconv"
 	"time"
@@ -118,14 +117,14 @@ func (uc *balanceUsecase) CreateBalanceUseCase(payload *model.PartnerCallbackVir
 	if err != nil {
 		return nil, err
 	}
-	mailsend := model.PayloadMail{
-		OrderId:       resp.ID,
-		CustomerName:  user.Name,
-		Status:        resp.Status,
-		RecipentEmail: user.Email,
-		TransactionAt: resp.UpdatedAt,
-	}
-	mail.SendingMail(mailsend)
+	// mailsend := model.PayloadMail{
+	// 	OrderId:       resp.ID,
+	// 	CustomerName:  user.Name,
+	// 	Status:        resp.Status,
+	// 	RecipentEmail: user.Email,
+	// 	TransactionAt: resp.UpdatedAt,
+	// }
+	// mail.SendingMail(mailsend)
 
 	return resp, nil
 }
