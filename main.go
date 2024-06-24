@@ -1,18 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/darulfh/skuy_pay_be/config"
+	"github.com/darulfh/skuy_pay_be/model"
+	echo "github.com/labstack/echo/v4"
 )
 
 func main() {
+	e := echo.New()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Hello World")
+	e.GET("/", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, model.MetaData{
+			Message: "Success",
+		})
 	})
 
-	fmt.Println("Serving on port 8080")
-	http.ListenAndServe(":8080", nil)
+	e.Logger.Fatal(e.Start(":" + config.AppConfig.AppPort))
 
 	// config.LoadConfig()
 
