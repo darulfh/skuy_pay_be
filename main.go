@@ -1,8 +1,11 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/darulfh/skuy_pay_be/config"
 	"github.com/darulfh/skuy_pay_be/database"
+	"github.com/darulfh/skuy_pay_be/model"
 	"github.com/darulfh/skuy_pay_be/routes"
 	m "github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
@@ -23,6 +26,12 @@ func main() {
 	database.Migrate(db)
 
 	e := echo.New()
+
+	e.GET("/", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, model.MetaData{
+			Message: "Success",
+		})
+	})
 	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 	// 	AllowOrigins: []string{"*"},
 	// 	AllowHeaders: []string{"*"},
