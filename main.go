@@ -1,9 +1,6 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/darulfh/skuy_pay_be/config"
 	"github.com/darulfh/skuy_pay_be/database"
 	"github.com/darulfh/skuy_pay_be/routes"
@@ -15,15 +12,6 @@ import (
 
 func main() {
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Health check request received")
-
-		// Write an HTTP 200 OK status
-		w.WriteHeader(http.StatusOK)
-
-		// Send a response body
-		w.Write([]byte("OK"))
-	})
 	config.LoadConfig()
 
 	db, err := database.ConnectDB()

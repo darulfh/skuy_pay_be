@@ -1,8 +1,11 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/darulfh/skuy_pay_be/config"
 	"github.com/darulfh/skuy_pay_be/controller"
+	"github.com/darulfh/skuy_pay_be/model"
 	"github.com/darulfh/skuy_pay_be/repository"
 	insurance "github.com/darulfh/skuy_pay_be/usecase/Insurance"
 	"github.com/darulfh/skuy_pay_be/usecase/auth"
@@ -87,7 +90,11 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	// 	`)
 	// })
 
-	// e.re
+	e.GET("/", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, model.MetaData{
+			Message: "Success",
+		})
+	})
 
 	// url
 	url := e.Group("/api/v1")
