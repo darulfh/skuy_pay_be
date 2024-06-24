@@ -6,8 +6,6 @@ import (
 	"github.com/darulfh/skuy_pay_be/config"
 	"github.com/darulfh/skuy_pay_be/database"
 	"github.com/darulfh/skuy_pay_be/model"
-	"github.com/darulfh/skuy_pay_be/routes"
-	m "github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
 	"github.com/labstack/echo/v4"
 )
@@ -37,8 +35,8 @@ func main() {
 	// 	AllowHeaders: []string{"*"},
 	// }))
 
-	routes.Routes(e, db)
-	m.LogMiddlewares(e)
+	// routes.Routes(e, db)
+	// m.LogMiddlewares(e)
 
 	// ====== HTTP ========
 	e.Logger.Fatal(e.Start(":" + config.AppConfig.AppPort))
