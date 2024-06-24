@@ -1,9 +1,6 @@
 package routes
 
 import (
-	"log"
-	"net/http"
-
 	"github.com/darulfh/skuy_pay_be/config"
 	"github.com/darulfh/skuy_pay_be/controller"
 	"github.com/darulfh/skuy_pay_be/repository"
@@ -91,16 +88,6 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	// })
 
 	// e.re
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Health check request received")
-
-		// Write an HTTP 200 OK status
-		w.WriteHeader(http.StatusOK)
-
-		// Send a response body
-		w.Write([]byte("OK"))
-	})
 
 	// url
 	url := e.Group("/api/v1")
