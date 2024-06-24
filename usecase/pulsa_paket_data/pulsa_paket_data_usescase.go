@@ -1,11 +1,12 @@
 package pulsa
 
 import (
-	"BE-Golang/dto"
-	"BE-Golang/model"
-	"BE-Golang/repository"
 	"errors"
 	"fmt"
+
+	"github.com/darulfh/skuy_pay_be/dto"
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
 
 	"github.com/google/uuid"
 )

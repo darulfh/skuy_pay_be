@@ -1,11 +1,12 @@
 package repository
 
 import (
-	"BE-Golang/config"
 	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"github.com/darulfh/skuy_pay_be/config"
 
 	"github.com/labstack/echo/v4"
 )

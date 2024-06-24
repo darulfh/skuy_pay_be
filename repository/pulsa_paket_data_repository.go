@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"BE-Golang/dto"
-	"BE-Golang/model"
 	"errors"
 	"fmt"
+
+	"github.com/darulfh/skuy_pay_be/dto"
+	"github.com/darulfh/skuy_pay_be/model"
 
 	"gorm.io/gorm"
 )

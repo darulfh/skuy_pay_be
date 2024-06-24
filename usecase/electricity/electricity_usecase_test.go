@@ -1,12 +1,13 @@
 package electricity_test
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository/mocks"
-	"BE-Golang/usecase/electricity"
 	"errors"
 	"testing"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository/mocks"
+	"github.com/darulfh/skuy_pay_be/usecase/electricity"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

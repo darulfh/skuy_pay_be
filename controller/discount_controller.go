@@ -1,12 +1,13 @@
 package controller
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/usecase/cloudinary"
-	"BE-Golang/usecase/discount"
-	"BE-Golang/usecase/middlewares"
 	"net/http"
 	"strconv"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/usecase/cloudinary"
+	"github.com/darulfh/skuy_pay_be/usecase/discount"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
 	"github.com/labstack/echo/v4"
 )

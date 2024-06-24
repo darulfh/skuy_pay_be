@@ -1,13 +1,14 @@
 package repository
 
 import (
-	"BE-Golang/config"
-	"BE-Golang/model"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/darulfh/skuy_pay_be/config"
+	"github.com/darulfh/skuy_pay_be/model"
 )
 
 type BillerOyApiRepository interface {

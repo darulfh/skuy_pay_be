@@ -1,10 +1,10 @@
 package main
 
 import (
-	"BE-Golang/config"
-	"BE-Golang/database"
-	"BE-Golang/routes"
-	m "BE-Golang/usecase/middlewares"
+	"github.com/darulfh/skuy_pay_be/config"
+	"github.com/darulfh/skuy_pay_be/database"
+	"github.com/darulfh/skuy_pay_be/routes"
+	m "github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

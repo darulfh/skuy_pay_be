@@ -1,10 +1,11 @@
 package auth
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository/mocks"
 	"errors"
 	"testing"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository/mocks"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"

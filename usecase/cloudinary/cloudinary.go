@@ -1,11 +1,12 @@
 package cloudinary
 
 import (
-	"BE-Golang/config"
-	"BE-Golang/model"
 	"context"
 	"mime/multipart"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/config"
+	"github.com/darulfh/skuy_pay_be/model"
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"

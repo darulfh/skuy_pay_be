@@ -1,11 +1,12 @@
 package controller
 
 import (
-	"BE-Golang/model"
-	insurance "BE-Golang/usecase/Insurance"
-	"BE-Golang/usecase/middlewares"
 	"net/http"
 	"strconv"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	insurance "github.com/darulfh/skuy_pay_be/usecase/Insurance"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
 	"github.com/labstack/echo/v4"
 )

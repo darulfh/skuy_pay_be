@@ -1,11 +1,12 @@
 package pulsa
 
 import (
-	"BE-Golang/dto"
-	"BE-Golang/model"
-	"BE-Golang/repository/mocks"
 	"errors"
 	"testing"
+
+	"github.com/darulfh/skuy_pay_be/dto"
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository/mocks"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

@@ -1,11 +1,12 @@
 package bank
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository"
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
 )
 
 type BankUseCase interface {

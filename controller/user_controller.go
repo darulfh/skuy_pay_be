@@ -1,14 +1,15 @@
 package controller
 
 import (
-	"BE-Golang/dto"
-	"BE-Golang/model"
-	"BE-Golang/usecase/cloudinary"
-	"BE-Golang/usecase/middlewares"
-	"BE-Golang/usecase/users"
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/darulfh/skuy_pay_be/dto"
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/usecase/cloudinary"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
+	"github.com/darulfh/skuy_pay_be/usecase/users"
 
 	"github.com/labstack/echo/v4"
 )

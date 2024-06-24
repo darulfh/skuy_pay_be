@@ -1,11 +1,12 @@
 package balance
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository"
 	"fmt"
 	"strconv"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
 
 	"github.com/google/uuid"
 )

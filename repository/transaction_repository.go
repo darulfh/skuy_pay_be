@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"BE-Golang/model"
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
 
 	"gorm.io/gorm"
 )

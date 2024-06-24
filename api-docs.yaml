@@ -4,7 +4,7 @@ info:
   version: 1.0.0
 servers:
   - url: http://34.101.78.228:2424/api/v1
-  - url: https://be-golang.kucinghitam.tech/api/v1
+  - url: https://github.com/darulfh/skuy_pay_be.kucinghitam.tech/api/v1
 paths:
   /login:
     post:

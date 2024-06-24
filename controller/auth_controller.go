@@ -1,9 +1,10 @@
 package controller
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/usecase/auth"
 	"net/http"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/usecase/auth"
 
 	"github.com/labstack/echo/v4"
 )

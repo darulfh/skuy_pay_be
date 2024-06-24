@@ -1,14 +1,15 @@
 package wifi
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository"
 	"errors"
 	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
 )
 
 type WifiUsecase interface {

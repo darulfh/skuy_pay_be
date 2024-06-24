@@ -1,8 +1,9 @@
 package database
 
 import (
-	"BE-Golang/config"
 	"fmt"
+
+	"github.com/darulfh/skuy_pay_be/config"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

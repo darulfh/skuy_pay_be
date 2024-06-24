@@ -1,16 +1,17 @@
 package users_test
 
 import (
-	"BE-Golang/dto"
-	"BE-Golang/model"
-	"BE-Golang/repository/mocks"
-	"BE-Golang/usecase/auth"
-	"BE-Golang/usecase/middlewares"
-	"BE-Golang/usecase/users"
 	"errors"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/dto"
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository/mocks"
+	"github.com/darulfh/skuy_pay_be/usecase/auth"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
+	"github.com/darulfh/skuy_pay_be/usecase/users"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

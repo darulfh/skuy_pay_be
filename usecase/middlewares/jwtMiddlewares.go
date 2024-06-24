@@ -1,9 +1,10 @@
 package middlewares
 
 import (
-	"BE-Golang/config"
-	"BE-Golang/model"
 	"net/http"
+
+	"github.com/darulfh/skuy_pay_be/config"
+	"github.com/darulfh/skuy_pay_be/model"
 
 	"strings"
 	"time"

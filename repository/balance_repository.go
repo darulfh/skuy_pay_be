@@ -3,7 +3,7 @@ package repository
 import (
 	"errors"
 
-	"BE-Golang/model"
+	"github.com/darulfh/skuy_pay_be/model"
 
 	"gorm.io/gorm"
 )

@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	model "BE-Golang/model"
+	model "github.com/darulfh/skuy_pay_be/model"
 
 	mock "github.com/stretchr/testify/mock"
 

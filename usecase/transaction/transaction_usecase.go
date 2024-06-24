@@ -1,12 +1,13 @@
 package transaction
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository"
 	"fmt"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
 
 	"github.com/google/uuid"
 )

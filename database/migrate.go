@@ -1,7 +1,7 @@
 package database
 
 import (
-	"BE-Golang/model"
+	"github.com/darulfh/skuy_pay_be/model"
 
 	"gorm.io/gorm"
 )

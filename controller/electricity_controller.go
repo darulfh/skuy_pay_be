@@ -1,11 +1,12 @@
 package controller
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/usecase/electricity"
-	"BE-Golang/usecase/middlewares"
 	"net/http"
 	"strconv"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/usecase/electricity"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
 	"github.com/labstack/echo/v4"
 )

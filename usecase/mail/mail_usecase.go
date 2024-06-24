@@ -1,12 +1,13 @@
 package mail
 
 import (
-	"BE-Golang/config"
-	"BE-Golang/model"
 	"bytes"
 	"fmt"
 	"html/template"
 	"log"
+
+	"github.com/darulfh/skuy_pay_be/config"
+	"github.com/darulfh/skuy_pay_be/model"
 
 	"gopkg.in/gomail.v2"
 )

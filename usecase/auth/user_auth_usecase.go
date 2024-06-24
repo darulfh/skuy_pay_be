@@ -1,12 +1,13 @@
 package auth
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository"
-	"BE-Golang/usecase/middlewares"
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
 	"golang.org/x/crypto/bcrypt"
 )

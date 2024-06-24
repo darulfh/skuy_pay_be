@@ -1,14 +1,15 @@
 package insurance
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository/mocks"
 	"errors"
 	"math/rand"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository/mocks"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"

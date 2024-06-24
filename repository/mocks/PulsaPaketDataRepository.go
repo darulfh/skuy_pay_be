@@ -3,8 +3,8 @@
 package mocks
 
 import (
-	dto "BE-Golang/dto"
-	model "BE-Golang/model"
+	dto "github.com/darulfh/skuy_pay_be/dto"
+	model "github.com/darulfh/skuy_pay_be/model"
 
 	mock "github.com/stretchr/testify/mock"
 )

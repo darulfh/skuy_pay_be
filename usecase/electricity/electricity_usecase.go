@@ -1,8 +1,6 @@
 package electricity
 
 import (
-	"BE-Golang/model"
-	"BE-Golang/repository"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,6 +8,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
 )
 
 type ElectricityUseCase interface {

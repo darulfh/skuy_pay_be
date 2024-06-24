@@ -1,4 +1,4 @@
-module BE-Golang
+module github.com/darulfh/skuy_pay_be
 
 go 1.17
 

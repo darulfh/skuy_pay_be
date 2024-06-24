@@ -6,9 +6,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"BE-Golang/model"
-	"BE-Golang/usecase/balance"
-	"BE-Golang/usecase/middlewares"
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/usecase/balance"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
 )
 
 type BalanceController interface {

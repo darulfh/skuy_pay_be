@@ -1,12 +1,13 @@
 package controller
 
 import (
-	"BE-Golang/dto"
-	"BE-Golang/model"
-	"BE-Golang/usecase/middlewares"
-	pulsa "BE-Golang/usecase/pulsa_paket_data"
 	"net/http"
 	"strconv"
+
+	"github.com/darulfh/skuy_pay_be/dto"
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
+	pulsa "github.com/darulfh/skuy_pay_be/usecase/pulsa_paket_data"
 
 	"github.com/labstack/echo/v4"
 )

@@ -1,15 +1,16 @@
 package users
 
 import (
-	"BE-Golang/dto"
-	"BE-Golang/model"
-	"BE-Golang/repository"
-	"BE-Golang/usecase/auth"
-	"BE-Golang/usecase/middlewares"
 	"errors"
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/darulfh/skuy_pay_be/dto"
+	"github.com/darulfh/skuy_pay_be/model"
+	"github.com/darulfh/skuy_pay_be/repository"
+	"github.com/darulfh/skuy_pay_be/usecase/auth"
+	"github.com/darulfh/skuy_pay_be/usecase/middlewares"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
