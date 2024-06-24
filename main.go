@@ -1,48 +1,39 @@
 package main
 
 import (
-	"github.com/darulfh/skuy_pay_be/config"
-	"github.com/darulfh/skuy_pay_be/database"
-	"github.com/darulfh/skuy_pay_be/routes"
-	m "github.com/darulfh/skuy_pay_be/usecase/middlewares"
-
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"fmt"
+	"net/http"
 )
 
 func main() {
 
-	config.LoadConfig()
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "Hello World")
+	})
 
-	db, err := database.ConnectDB()
-	if err != nil {
-		panic(err)
-	}
+	fmt.Println("Serving on port 8080")
+	http.ListenAndServe(":8080", nil)
 
-	// database.Drop(db)
+	// config.LoadConfig()
 
-	database.Migrate(db)
-
-	e := echo.New()
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{"*"},
-	}))
-
-	routes.Routes(e, db)
-	m.LogMiddlewares(e)
-
-	// ====== HTTPS ========
-	// httpsServer := &http.Server{
-	// 	Addr:      fmt.Sprintf(":%s", config.AppConfig.AppPort),
-	// 	Handler:   e,
-	// 	TLSConfig: &tls.Config{},
+	// db, err := database.ConnectDB()
+	// if err != nil {
+	// 	panic(err)
 	// }
 
-	// if err := httpsServer.ListenAndServeTLS("server.crt", "server.key"); err != http.ErrServerClosed {
-	// 	log.Fatal(err)
-	// }
+	// // database.Drop(db)
 
-	// ====== HTTP ========
-	e.Logger.Fatal(e.Start(":" + config.AppConfig.AppPort))
+	// database.Migrate(db)
+
+	// e := echo.New()
+	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowOrigins: []string{"*"},
+	// 	AllowHeaders: []string{"*"},
+	// }))
+
+	// routes.Routes(e, db)
+	// m.LogMiddlewares(e)
+
+	// // ====== HTTP ========
+	// e.Logger.Fatal(e.Start(":" + config.AppConfig.AppPort))
 }
