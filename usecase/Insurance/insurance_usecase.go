@@ -3,7 +3,6 @@ package insurance
 import (
 	"BE-Golang/model"
 	"BE-Golang/repository"
-	"BE-Golang/usecase/mail"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -246,23 +245,23 @@ func (uc *insuranceUseCase) PayBillInsuranceUseCase(userId string, payload *mode
 		ProductDetail: transaction.ProductDetail,
 	}
 
-	mailsend := model.PayloadMail{
-		OrderId:        transaction.ID,
-		CustomerName:   user.Name,
-		Status:         resp.Status,
-		Class:          insurance.Class,
-		ProductType:    "BPJS",
-		DiscountPrice:  transaction.DiscountPrice,
-		NumberOffamily: insurance.NumberOffamily,
-		Period:         insurance.Period,
-		RecipentEmail:  user.Email,
-		TransactionAt:  resp.UpdatedAt,
-		Description:    transaction.Description,
-		AdminFee:       transaction.AdminFee,
-		Price:          transaction.Price,
-		TotalPrice:     transaction.TotalPrice,
-	}
-	mail.SendingMail(mailsend)
+	// mailsend := model.PayloadMail{
+	// 	OrderId:        transaction.ID,
+	// 	CustomerName:   user.Name,
+	// 	Status:         resp.Status,
+	// 	Class:          insurance.Class,
+	// 	ProductType:    "BPJS",
+	// 	DiscountPrice:  transaction.DiscountPrice,
+	// 	NumberOffamily: insurance.NumberOffamily,
+	// 	Period:         insurance.Period,
+	// 	RecipentEmail:  user.Email,
+	// 	TransactionAt:  resp.UpdatedAt,
+	// 	Description:    transaction.Description,
+	// 	AdminFee:       transaction.AdminFee,
+	// 	Price:          transaction.Price,
+	// 	TotalPrice:     transaction.TotalPrice,
+	// }
+	// mail.SendingMail(mailsend)
 
 	return transactionresp, nil
 }

@@ -3,7 +3,6 @@ package wifi
 import (
 	"BE-Golang/model"
 	"BE-Golang/repository"
-	"BE-Golang/usecase/mail"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -243,19 +242,19 @@ func (uc *wifiUsecase) PayBillWifiUseCase(userId string, payload *model.OyBiller
 		ProductDetail: transaction.ProductDetail,
 	}
 
-	mailsend := model.PayloadMail{
-		OrderId:       transaction.ID,
-		CustomerName:  user.Name,
-		Status:        resp.Status,
-		RecipentEmail: user.Email,
-		TransactionAt: resp.UpdatedAt,
-		ProductType:   "WIFI",
-		Description:   transaction.Description,
-		AdminFee:      transaction.AdminFee,
-		Price:         transaction.Price,
-		TotalPrice:    transaction.TotalPrice,
-	}
-	mail.SendingMail(mailsend)
+	// mailsend := model.PayloadMail{
+	// 	OrderId:       transaction.ID,
+	// 	CustomerName:  user.Name,
+	// 	Status:        resp.Status,
+	// 	RecipentEmail: user.Email,
+	// 	TransactionAt: resp.UpdatedAt,
+	// 	ProductType:   "WIFI",
+	// 	Description:   transaction.Description,
+	// 	AdminFee:      transaction.AdminFee,
+	// 	Price:         transaction.Price,
+	// 	TotalPrice:    transaction.TotalPrice,
+	// }
+	// mail.SendingMail(mailsend)
 
 	return transactionresp, nil
 }

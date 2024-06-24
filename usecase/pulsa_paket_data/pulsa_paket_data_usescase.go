@@ -4,7 +4,6 @@ import (
 	"BE-Golang/dto"
 	"BE-Golang/model"
 	"BE-Golang/repository"
-	"BE-Golang/usecase/mail"
 	"errors"
 	"fmt"
 
@@ -187,21 +186,21 @@ func (uc *pulsaPaketDataUsecase) CreateTransactionPPD(userID string, payload dto
 		return &model.Transaction{}, fmt.Errorf("error update amount")
 	}
 
-	mailsend := model.PayloadMail{
-		OrderId:       transaction.ID,
-		CustomerName:  user.Name,
-		Status:        ts.Status,
-		ProductType:   "PPD",
-		RecipentEmail: user.Email,
-		Phone:         td.Phone,
-		TransactionAt: ts.UpdatedAt,
-		AdminFee:      0,
-		Description:   transaction.Description,
-		Price:         transaction.TotalPrice,
-		TotalPrice:    transaction.TotalPrice,
-	}
+	// mailsend := model.PayloadMail{
+	// 	OrderId:       transaction.ID,
+	// 	CustomerName:  user.Name,
+	// 	Status:        ts.Status,
+	// 	ProductType:   "PPD",
+	// 	RecipentEmail: user.Email,
+	// 	Phone:         td.Phone,
+	// 	TransactionAt: ts.UpdatedAt,
+	// 	AdminFee:      0,
+	// 	Description:   transaction.Description,
+	// 	Price:         transaction.TotalPrice,
+	// 	TotalPrice:    transaction.TotalPrice,
+	// }
 
-	mail.SendingMail(mailsend)
+	// mail.SendingMail(mailsend)
 
 	return ts, nil
 }
