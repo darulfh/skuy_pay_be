@@ -9,6 +9,9 @@ import (
 )
 
 func main() {
+
+	config.LoadConfig()
+
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
