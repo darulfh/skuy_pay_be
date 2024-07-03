@@ -31,6 +31,9 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	authUseCase := auth.NewAuthUsecase(authRepository)
 	authController := controller.NewAuthController(authUseCase)
 
+	// IAK
+	iakRepository := repository.NewIakApiRepository()
+
 	// Transaction
 	transactionRepository := repository.NewTransactionRepository(db)
 	transactionUseCase := transaction.NewTransactionUsecase(transactionRepository)
@@ -48,7 +51,7 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 
 	// Pulsa Paket Data
 	ppdRepository := repository.NewPulsaPaketDataRepository(db)
-	ppdUsecase := pulsa.NewPulsaPaketDataUsecase(ppdRepository, userRepository, transactionRepository, discountRepository)
+	ppdUsecase := pulsa.NewPulsaPaketDataUsecase(ppdRepository, userRepository, transactionRepository, discountRepository, iakRepository)
 	ppdController := controller.NewPulsaPaketDataController(ppdUsecase)
 
 	// Balance

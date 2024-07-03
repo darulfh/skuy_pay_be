@@ -24,3 +24,34 @@ type PPDResponse struct {
 	IsActive    *bool   `json:"is_active"`
 	Description string  `json:"description"`
 }
+
+type PPDIakRequest struct {
+	// username IAK
+	Username string `json:"username"`
+
+	// phone number
+	CustomerID string `json:"customer_id"`
+
+	// Product code for pulsa or paket data
+	ProductCode string `json:"product_code"`
+
+	// ID transaction
+	RefID string `json:"ref_id"`
+
+	// Api key IAK
+	Sign string `json:"sign"`
+}
+
+type PPDIakResponse struct {
+	Data struct {
+		RefID       string `json:"ref_id"`
+		Status      int    `json:"status"`
+		ProductCode string `json:"product_code"`
+		CustomerID  string `json:"customer_id"`
+		Price       int    `json:"price"`
+		Message     string `json:"message"`
+		Balance     int    `json:"balance"`
+		TrID        int    `json:"tr_id"`
+		Rc          string `json:"rc"`
+	} `json:"data"`
+}

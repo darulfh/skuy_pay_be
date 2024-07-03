@@ -38,6 +38,10 @@ type Config struct {
 	CloudKey    string `mapstructure:"CLOUD_KEY"`
 	ApiSecret   string `mapstructure:"API_SECRET"`
 	CloudFolder string `mapstructure:"CLOUD_FOLDER"`
+
+	// IAK
+	UsernameIak string `mapstructure:"USERNAME_IAK"`
+	ApiKeyIak   string `mapstructure:"API_KEY_IAK"`
 }
 
 var (
@@ -45,7 +49,6 @@ var (
 )
 
 func LoadConfig() *Config {
-
 	viper.SetConfigType("env")
 	viper.SetConfigName("public")
 	// viper.SetConfigName("dev")

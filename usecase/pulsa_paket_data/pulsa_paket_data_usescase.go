@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/darulfh/skuy_pay_be/config"
 	"github.com/darulfh/skuy_pay_be/dto"
 	"github.com/darulfh/skuy_pay_be/model"
 	"github.com/darulfh/skuy_pay_be/repository"
@@ -25,14 +26,16 @@ type pulsaPaketDataUsecase struct {
 	userRepository        repository.UserRepository
 	transactionRepository repository.TransactionRepository
 	discountRepository    repository.DiscountRepository
+	iakRepository         repository.IakApiRepository
 }
 
-func NewPulsaPaketDataUsecase(ppdRepository repository.PulsaPaketDataRepository, userRepository repository.UserRepository, transactionRepository repository.TransactionRepository, discountRepository repository.DiscountRepository) *pulsaPaketDataUsecase {
+func NewPulsaPaketDataUsecase(ppdRepository repository.PulsaPaketDataRepository, userRepository repository.UserRepository, transactionRepository repository.TransactionRepository, discountRepository repository.DiscountRepository, iakApi repository.IakApiRepository) *pulsaPaketDataUsecase {
 	return &pulsaPaketDataUsecase{
 		ppdRepository:         ppdRepository,
 		userRepository:        userRepository,
 		transactionRepository: transactionRepository,
 		discountRepository:    discountRepository,
+		iakRepository:         iakApi,
 	}
 }
 
@@ -157,9 +160,9 @@ func (uc *pulsaPaketDataUsecase) CreateTransactionPPD(userID string, payload dto
 		Status:        model.STATUS_SUCCESSFUL,
 		ProductType:   ppd.Type,
 		Description:   fmt.Sprintf("Pembelian Pulsa Paket Data  %s ", ppd.Type),
-		AdminFee:      model.ADMIN_FEE,
+		AdminFee:      2000,
 		Price:         ppd.Price,
-		TotalPrice:    ppd.Price + model.ADMIN_FEE - discount.DiscountPrice,
+		TotalPrice:    ppd.Price + 2000 - discount.DiscountPrice,
 		ProductDetail: td,
 		DiscountPrice: discount.DiscountPrice,
 	}
@@ -172,6 +175,25 @@ func (uc *pulsaPaketDataUsecase) CreateTransactionPPD(userID string, payload dto
 
 	if user.Amount < transaction.TotalPrice {
 		return &model.Transaction{}, errors.New("your balance is not enough")
+	}
+
+	iakReq := model.PPDIakRequest{
+		Username:    config.AppConfig.UsernameIak,
+		CustomerID:  payload.PhoneNumber,
+		ProductCode: ppd.Code,
+		RefID:       uuid.New().String(),
+	}
+
+	fmt.Printf("%+v\n", iakReq)
+
+	iakResp, err := uc.iakRepository.PPDIakRepository(&iakReq)
+
+	fmt.Printf("%+v\n", iakResp)
+
+	transaction.ID = iakResp.Data.RefID
+
+	if err != nil {
+		return &model.Transaction{}, fmt.Errorf("failed transaction %s", err)
 	}
 
 	ts, err := uc.transactionRepository.CreateTransactionByUserIdRepository(transaction)
