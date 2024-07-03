@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/darulfh/skuy_pay_be/config"
 	"github.com/darulfh/skuy_pay_be/controller"
 	"github.com/darulfh/skuy_pay_be/repository"
@@ -86,11 +84,12 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	electricityUseCase := electricity.NewElectricityUseCase(electricityRepository, userRepository, discountRepository, transactionRepository, billerRepository)
 	electricityController := controller.NewElectricityController(electricityUseCase)
 
-	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, `
-			<h1>Welcome to PPOB APP</h1>
-		`)
-	})
+	// e.GET("/", func(c echo.Context) error {
+	// 	return c.HTML(http.StatusOK, `
+	// 		<h1>Welcome to PPOB APP</h1>
+	// 	`)
+	// })
+
 	// url
 	url := e.Group("/api/v1")
 
