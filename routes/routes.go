@@ -76,7 +76,7 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 
 	// INSURANCE
 	insuranceRepository := repository.NewInsuranceRepository(db)
-	insuranceUseCase := insurance.NewInsuranceUseCase(insuranceRepository, userRepository, discountRepository, transactionRepository, billerRepository)
+	insuranceUseCase := insurance.NewInsuranceUseCase(insuranceRepository, userRepository, discountRepository, transactionRepository, billerRepository, iakRepository)
 	insuranceController := controller.NewInsuranceController(insuranceUseCase)
 
 	// ELECTRICITY
@@ -210,6 +210,8 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	all.GET("/insurance/:id", insuranceController.GetInsuranceByIdController)
 	all.POST("/insurance/inquiry", insuranceController.BillInquiryInsuranceController)
 	all.POST("/insurance/pay", insuranceController.PayBillInquiryInsuranceController)
+	all.POST("/bpjs/pay", insuranceController.BpjsPayIakUseCase)
+	all.POST("/bpjs/inquiry", insuranceController.BpjsInquiryIakUseCase)
 
 	// Electricity
 	all.GET("/electricitys", electricityController.GetAllElectricityController)

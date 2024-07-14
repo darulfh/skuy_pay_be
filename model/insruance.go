@@ -12,3 +12,45 @@ type Insurance struct {
 	DiscountId     string  `gorm:"type:varchar(100)" json:"discount_id"`
 	Price          float64 `gorm:"type:decimal(12)" json:"price"`
 }
+
+type BpjsInquiryBody struct {
+	Commands string `json:"commands"`
+	Hp       string `json:"hp"`
+	Code     string `json:"code"`
+	RefID    string `json:"ref_id"`
+	Month    int    `json:"month"`
+	Username string `json:"username"`
+	Sign     string `json:"sign"`
+}
+
+type BpjsIAKResponse struct {
+	Data struct {
+		TrID         int    `json:"tr_id"`
+		Code         string `json:"code"`
+		Hp           string `json:"hp"`
+		TrName       string `json:"tr_name"`
+		Period       string `json:"period"`
+		Nominal      int    `json:"nominal"`
+		Admin        int    `json:"admin"`
+		RefID        string `json:"ref_id"`
+		ResponseCode string `json:"response_code"`
+		Message      string `json:"message"`
+		Price        int    `json:"price"`
+		SellingPrice int    `json:"selling_price"`
+		Desc         struct {
+			KodeCabang     string `json:"kode_cabang"`
+			NamaCabang     string `json:"nama_cabang"`
+			SisaPembayaran string `json:"sisa_pembayaran"`
+			JumlahPeserta  string `json:"jumlah_peserta"`
+		} `json:"desc"`
+	} `json:"data"`
+	Meta []interface{} `json:"meta"`
+}
+
+type BpjsPayBody struct {
+	Commands string `json:"commands"`
+	TrID     int    `json:"tr_id"`
+	Username string `json:"username"`
+	Sign     string `json:"sign"`
+	RefID    string `json:"ref_id"`
+}

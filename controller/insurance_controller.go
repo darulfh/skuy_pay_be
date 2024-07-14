@@ -19,6 +19,9 @@ type InsuranceController interface {
 	DeleteInsuranceByIdController(c echo.Context) error
 	BillInquiryInsuranceController(c echo.Context) error
 	PayBillInquiryInsuranceController(c echo.Context) error
+
+	BpjsInquiryIakUseCase(c echo.Context) error
+	BpjsPayIakUseCase(c echo.Context) error
 }
 
 type insuranceController struct {
@@ -229,12 +232,71 @@ func (ctrl *insuranceController) PayBillInquiryInsuranceController(c echo.Contex
 	}
 
 	var payload model.OyBillerApi
+
 	err := c.Bind(&payload)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
 	response, err := ctrl.insuranceUseCase.PayBillInsuranceUseCase(userId, &payload)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusAccepted, model.HttpResponse{
+		MetaData: model.MetaData{
+			StatusCode: http.StatusAccepted,
+			Message:    "Succesfully pay bill",
+		},
+		Data: response,
+	})
+}
+
+func (ctrl *insuranceController) BpjsInquiryIakUseCase(c echo.Context) error {
+	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
+	if userId == "" {
+		return c.JSON(http.StatusUnauthorized, model.ErrorResponse{
+			StatusCode: http.StatusUnauthorized,
+			Message:    "token unauthorized",
+		})
+	}
+
+	var payload model.BpjsInquiryBody
+
+	err := c.Bind(&payload)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	response, err := ctrl.insuranceUseCase.BpjsInquiryIakUseCase(&payload)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusAccepted, model.HttpResponse{
+		MetaData: model.MetaData{
+			StatusCode: http.StatusAccepted,
+			Message:    "Succesfully pay bill",
+		},
+		Data: response,
+	})
+}
+func (ctrl *insuranceController) BpjsPayIakUseCase(c echo.Context) error {
+	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
+	if userId == "" {
+		return c.JSON(http.StatusUnauthorized, model.ErrorResponse{
+			StatusCode: http.StatusUnauthorized,
+			Message:    "token unauthorized",
+		})
+	}
+
+	var payload model.BpjsPayBody
+
+	err := c.Bind(&payload)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	response, err := ctrl.insuranceUseCase.BpjsPayIakUseCase(&payload, userId)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}

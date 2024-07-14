@@ -40,8 +40,9 @@ type Config struct {
 	CloudFolder string `mapstructure:"CLOUD_FOLDER"`
 
 	// IAK
-	UsernameIak string `mapstructure:"USERNAME_IAK"`
-	ApiKeyIak   string `mapstructure:"API_KEY_IAK"`
+	UsernameIak        string `mapstructure:"USERNAME_IAK"`
+	ApiKeyIak          string `mapstructure:"API_KEY_IAK"`
+	BaseUrlIakPostPaid string `mapstructure:"BASEURL_IAK_Post_Paid"`
 }
 
 var (

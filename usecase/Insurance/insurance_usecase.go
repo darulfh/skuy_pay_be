@@ -22,6 +22,9 @@ type InsuranceUseCase interface {
 	BillInquiryInsuranceUseCase(userId string, payload *model.OyBillerApi) (*model.Transaction, error)
 	PayBillInsuranceUseCase(userId string, payload *model.OyBillerApi) (*model.Transaction, error)
 	BillInsuranceStatusUseCase(payload *model.OyBillerApi) (*model.OyBillerApiResponse, error)
+
+	BpjsInquiryIakUseCase(payload *model.BpjsInquiryBody) (*model.BpjsIAKResponse, error)
+	BpjsPayIakUseCase(payload *model.BpjsPayBody, userId string) (*model.BpjsIAKResponse, error)
 }
 
 type insuranceUseCase struct {
@@ -30,10 +33,11 @@ type insuranceUseCase struct {
 	discountRepository    repository.DiscountRepository
 	transactionRepository repository.TransactionRepository
 	billerOyApi           repository.BillerOyApiRepository
+	iakRepository         repository.IakApiRepository
 }
 
-func NewInsuranceUseCase(insuranceRepository repository.InsuranceRepository, userRepository repository.UserRepository, discountRepository repository.DiscountRepository, transactionRepository repository.TransactionRepository, billerOyApiRepository repository.BillerOyApiRepository) *insuranceUseCase {
-	return &insuranceUseCase{insuranceRepository: insuranceRepository, userRepository: userRepository, discountRepository: discountRepository, transactionRepository: transactionRepository, billerOyApi: billerOyApiRepository}
+func NewInsuranceUseCase(insuranceRepository repository.InsuranceRepository, userRepository repository.UserRepository, discountRepository repository.DiscountRepository, transactionRepository repository.TransactionRepository, billerOyApiRepository repository.BillerOyApiRepository, iakRepository repository.IakApiRepository) *insuranceUseCase {
+	return &insuranceUseCase{insuranceRepository: insuranceRepository, userRepository: userRepository, discountRepository: discountRepository, transactionRepository: transactionRepository, billerOyApi: billerOyApiRepository, iakRepository: iakRepository}
 }
 
 func (uc *insuranceUseCase) CreateInsuranceUseCase(payload *model.Insurance) (*model.Insurance, error) {
@@ -120,6 +124,7 @@ func (uc *insuranceUseCase) BillInquiryInsuranceUseCase(userId string, payload *
 		Period:     payload.Period,
 		CustomerId: payload.CustomerId,
 	})
+
 	if err == nil {
 		if existingPdam.Status == model.STATUS_SUCCESSFUL {
 			return nil, errors.New("this month's bill has been paid")
@@ -275,6 +280,66 @@ func (uc *insuranceUseCase) BillInsuranceStatusUseCase(payload *model.OyBillerAp
 	}
 
 	return insurance, nil
+}
+
+func (uc *insuranceUseCase) BpjsInquiryIakUseCase(payload *model.BpjsInquiryBody) (*model.BpjsIAKResponse, error) {
+	bpjs, err := uc.iakRepository.BpjsInquiryRepository(payload)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
+	}
+
+	return bpjs, nil
+}
+func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.BpjsPayBody, userId string) (*model.BpjsIAKResponse, error) {
+	bpjsCheck, err := uc.iakRepository.BpjsCheckRepository(payload)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
+	}
+
+	totalPrice := float64(bpjsCheck.Data.Price)
+
+	user, err := uc.userRepository.GetUserByIDRepository(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.Amount < totalPrice {
+		return nil, errors.New("your balance is not enough")
+	}
+
+	bpjs, err := uc.iakRepository.BpjsPayRepository(payload)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
+	}
+
+	transaction := &model.Transaction{
+		ID:            strconv.Itoa(bpjs.Data.TrID),
+		UserID:        userId,
+		Status:        model.STATUS_SUCCESSFUL,
+		ProductType:   "BPJS",
+		DiscountPrice: 0,
+		AdminFee:      1000,
+		Description:   fmt.Sprintf("Pembayaran Tagihan asuransi %s ", bpjs.Data.Period),
+		Price:         float64(bpjs.Data.Nominal),
+		TotalPrice:    totalPrice,
+		ProductDetail: bpjs.Data,
+	}
+
+	_, err = uc.transactionRepository.CreateTransactionByUserIdRepository(transaction)
+	if err != nil {
+		return nil, fmt.Errorf("error creating insurance in database: %w", err)
+	}
+
+	user.Amount -= totalPrice
+
+	_, err = uc.userRepository.UpdateUserAmountByIDRepository(userId, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return bpjs, nil
 }
 
 func generateVANumber(length int) string {
