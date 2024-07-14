@@ -276,7 +276,7 @@ func (uc *insuranceUseCase) BillInsuranceStatusUseCase(payload *model.OyBillerAp
 
 	insurance, err := uc.billerOyApi.BillInquryRepository(payload)
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
+		return nil, fmt.Errorf("%v", err)
 	}
 
 	return insurance, nil
@@ -286,7 +286,7 @@ func (uc *insuranceUseCase) BpjsInquiryIakUseCase(payload *model.BpjsInquiryBody
 	bpjs, err := uc.iakRepository.BpjsInquiryRepository(payload)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
+		return nil, fmt.Errorf("%v", err)
 	}
 
 	return bpjs, nil
@@ -294,7 +294,7 @@ func (uc *insuranceUseCase) BpjsInquiryIakUseCase(payload *model.BpjsInquiryBody
 func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.BpjsPayBody, userId string) (*model.BpjsIAKResponse, error) {
 	bpjsCheck, err := uc.iakRepository.BpjsCheckRepository(payload)
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
+		return nil, fmt.Errorf("%v", err)
 	}
 
 	payload.TrID = bpjsCheck.Data.TrID
@@ -317,7 +317,7 @@ func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.BpjsPayBody, userId
 	bpjs, err := uc.iakRepository.BpjsPayRepository(payload)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
+		return nil, fmt.Errorf("%v", err)
 	}
 
 	transaction := &model.Transaction{
