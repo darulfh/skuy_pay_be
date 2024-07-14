@@ -45,7 +45,7 @@ func (r *pulsaPaketDataRepository) GetAllPulsaPaketData(data dto.PulsaDto, isUse
 	var ppd []model.PulsaPaketData
 	offset := (data.Page - 1) * data.Limit
 	if isUser != nil {
-		if err := r.db.Where("provider = ? AND is_active = ?", data.Provider, true).Offset(offset).Limit(data.Limit).Find(&ppd).Error; err != nil {
+		if err := r.db.Where("provider = ? AND is_active = ?", data.Provider, true).Offset(offset).Limit(100).Find(&ppd).Error; err != nil {
 			return ppd, fmt.Errorf("error getting %s: %s", data.Type, err)
 		}
 	} else {

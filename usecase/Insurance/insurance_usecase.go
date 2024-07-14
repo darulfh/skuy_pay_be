@@ -297,7 +297,13 @@ func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.BpjsPayBody, userId
 		return nil, fmt.Errorf("failed to retrieve insurance: %v", err)
 	}
 
+	payload.TrID = bpjsCheck.Data.TrID
+
+	fmt.Printf("bpjsCheck.Data.Price = %d \n", bpjsCheck.Data.Price)
+
 	totalPrice := float64(bpjsCheck.Data.Price)
+
+	fmt.Printf("totalPrice = %f \n", totalPrice)
 
 	user, err := uc.userRepository.GetUserByIDRepository(userId)
 	if err != nil {
@@ -315,7 +321,7 @@ func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.BpjsPayBody, userId
 	}
 
 	transaction := &model.Transaction{
-		ID:            strconv.Itoa(bpjs.Data.TrID),
+		ID:            bpjs.Data.RefID,
 		UserID:        userId,
 		Status:        model.STATUS_SUCCESSFUL,
 		ProductType:   "BPJS",
@@ -332,7 +338,12 @@ func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.BpjsPayBody, userId
 		return nil, fmt.Errorf("error creating insurance in database: %w", err)
 	}
 
-	user.Amount -= totalPrice
+	fmt.Printf("user.Amount1 = %f \n", user.Amount)
+	fmt.Printf("transaction.TotalPrice = %f \n", transaction.TotalPrice)
+
+	user.Amount -= transaction.TotalPrice
+
+	fmt.Printf("user.Amount2 = %f \n", user.Amount)
 
 	_, err = uc.userRepository.UpdateUserAmountByIDRepository(userId, user)
 	if err != nil {

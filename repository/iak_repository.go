@@ -116,24 +116,40 @@ func (*iakApiRepository) BpjsPayRepository(payload *model.BpjsPayBody) (*model.B
 func (*iakApiRepository) BpjsCheckRepository(payload *model.BpjsPayBody) (*model.BpjsIAKResponse, error) {
 	payload.Commands = "checkstatus"
 	payload.Username = config.AppConfig.UsernameIak
-	payload.Sign = sign(payload.RefID)
+	payload.Sign = sign("cs")
+
+	fmt.Printf("response123123: %+v\n", payload)
+
 	resp, err := doRequestIak(http.MethodPost, config.AppConfig.BaseUrlIakPostPaid+"/api/v1/bill/check", payload)
+
+	fmt.Printf("response0: %+v\n", resp)
 
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return nil, errors.New("error reading response body")
-	}
-
 	var response model.BpjsIAKResponse
-	if err := json.Unmarshal(body, &response); err != nil {
-		return nil, fmt.Errorf("error parsing response body: %w", err)
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		panic(err)
 	}
+
+	// body, err := ioutil.ReadAll(resp.Body)
+
+	// fmt.Printf("response14: %+v\n", resp)
+
+	// if err != nil {
+	// 	return nil, errors.New("error reading response body")
+	// }
+
+	// var response model.BpjsIAKResponse
+	// if err := json.Unmarshal(body, &response); err != nil {
+	// 	return nil, fmt.Errorf("error parsing response body: %w", err)
+	// }
+
+	fmt.Printf("response1: %+v\n", response)
 
 	return &response, nil
 }
