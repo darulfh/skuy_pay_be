@@ -272,13 +272,14 @@ func (ctrl *insuranceController) BpjsInquiryIakUseCase(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-	return c.JSON(http.StatusAccepted, model.HttpResponse{
-		MetaData: model.MetaData{
-			StatusCode: http.StatusAccepted,
-			Message:    "Succesfully pay bill",
-		},
-		Data: response,
-	})
+	return c.JSON(http.StatusAccepted, response)
+	// 	model.HttpResponse{
+	// 	MetaData: model.MetaData{
+	// 		StatusCode: http.StatusAccepted,
+	// 		Message:    "Succesfully pay bill",
+	// 	},
+	// 	Data: response,
+	// })
 }
 func (ctrl *insuranceController) BpjsPayIakUseCase(c echo.Context) error {
 	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
@@ -300,11 +301,12 @@ func (ctrl *insuranceController) BpjsPayIakUseCase(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-	return c.JSON(http.StatusAccepted, model.HttpResponse{
-		MetaData: model.MetaData{
-			StatusCode: http.StatusAccepted,
-			Message:    "Succesfully pay bill",
-		},
-		Data: response,
-	})
+	return c.JSON(http.StatusAccepted, response)
+	// model.HttpResponse{
+	// MetaData: model.MetaData{
+	// 	StatusCode: http.StatusAccepted,
+	// 	Message:    "Succesfully pay bill",
+	// },
+	// Data: response,
+	// })
 }
