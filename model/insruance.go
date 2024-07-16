@@ -13,7 +13,7 @@ type Insurance struct {
 	Price          float64 `gorm:"type:decimal(12)" json:"price"`
 }
 
-type BpjsInquiryBody struct {
+type IakInquiryBody struct {
 	Commands string `json:"commands"`
 	Hp       string `json:"hp"`
 	Code     string `json:"code"`
@@ -47,7 +47,7 @@ type BpjsIAKResponse struct {
 	Meta []interface{} `json:"meta"`
 }
 
-type BpjsPayBody struct {
+type IakPayBody struct {
 	Commands string `json:"commands"`
 	TrID     int    `json:"tr_id"`
 	Username string `json:"username"`

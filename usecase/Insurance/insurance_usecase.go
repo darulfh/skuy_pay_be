@@ -23,8 +23,8 @@ type InsuranceUseCase interface {
 	PayBillInsuranceUseCase(userId string, payload *model.OyBillerApi) (*model.Transaction, error)
 	BillInsuranceStatusUseCase(payload *model.OyBillerApi) (*model.OyBillerApiResponse, error)
 
-	BpjsInquiryIakUseCase(payload *model.BpjsInquiryBody) (*model.BpjsIAKResponse, error)
-	BpjsPayIakUseCase(payload *model.BpjsPayBody, userId string) (*model.BpjsIAKResponse, error)
+	BpjsInquiryIakUseCase(payload *model.IakInquiryBody) (*model.BpjsIAKResponse, error)
+	BpjsPayIakUseCase(payload *model.IakPayBody, userId string) (*model.BpjsIAKResponse, error)
 }
 
 type insuranceUseCase struct {
@@ -282,7 +282,7 @@ func (uc *insuranceUseCase) BillInsuranceStatusUseCase(payload *model.OyBillerAp
 	return insurance, nil
 }
 
-func (uc *insuranceUseCase) BpjsInquiryIakUseCase(payload *model.BpjsInquiryBody) (*model.BpjsIAKResponse, error) {
+func (uc *insuranceUseCase) BpjsInquiryIakUseCase(payload *model.IakInquiryBody) (*model.BpjsIAKResponse, error) {
 	bpjs, err := uc.iakRepository.BpjsInquiryRepository(payload)
 
 	if err != nil {
@@ -291,7 +291,7 @@ func (uc *insuranceUseCase) BpjsInquiryIakUseCase(payload *model.BpjsInquiryBody
 
 	return bpjs, nil
 }
-func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.BpjsPayBody, userId string) (*model.BpjsIAKResponse, error) {
+func (uc *insuranceUseCase) BpjsPayIakUseCase(payload *model.IakPayBody, userId string) (*model.BpjsIAKResponse, error) {
 	bpjsCheck, err := uc.iakRepository.BpjsCheckRepository(payload)
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)

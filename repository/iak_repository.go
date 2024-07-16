@@ -16,9 +16,14 @@ import (
 
 type IakApiRepository interface {
 	PPDIakRepository(payload *model.PPDIakRequest) (*model.PPDIakResponse, error)
-	BpjsInquiryRepository(payload *model.BpjsInquiryBody) (*model.BpjsIAKResponse, error)
-	BpjsPayRepository(payload *model.BpjsPayBody) (*model.BpjsIAKResponse, error)
-	BpjsCheckRepository(payload *model.BpjsPayBody) (*model.BpjsIAKResponse, error)
+
+	BpjsInquiryRepository(payload *model.IakInquiryBody) (*model.BpjsIAKResponse, error)
+	BpjsPayRepository(payload *model.IakPayBody) (*model.BpjsIAKResponse, error)
+	BpjsCheckRepository(payload *model.IakPayBody) (*model.BpjsIAKResponse, error)
+
+	ElectricityBillInquiryRepository(payload *model.IakInquiryBody) (*model.IakPostPaidResponse, error)
+	ElectricityBillPayRepository(payload *model.IakPayBody) (*model.IakPostPaidResponse, error)
+	ElectricityBillCheckRepository(payload *model.IakPayBody) (*model.IakPostPaidResponse, error)
 }
 
 type iakApiRepository struct{}
@@ -51,7 +56,7 @@ func (*iakApiRepository) PPDIakRepository(payload *model.PPDIakRequest) (*model.
 	return &response, nil
 }
 
-func (*iakApiRepository) BpjsInquiryRepository(payload *model.BpjsInquiryBody) (*model.BpjsIAKResponse, error) {
+func (*iakApiRepository) BpjsInquiryRepository(payload *model.IakInquiryBody) (*model.BpjsIAKResponse, error) {
 	payload.Commands = "inq-pasca"
 	payload.Code = "BPJS"
 	payload.RefID = uuid.New().String()
@@ -83,7 +88,7 @@ func (*iakApiRepository) BpjsInquiryRepository(payload *model.BpjsInquiryBody) (
 	return &response, nil
 }
 
-func (*iakApiRepository) BpjsPayRepository(payload *model.BpjsPayBody) (*model.BpjsIAKResponse, error) {
+func (*iakApiRepository) BpjsPayRepository(payload *model.IakPayBody) (*model.BpjsIAKResponse, error) {
 	payload.Commands = "pay-pasca"
 	payload.Username = config.AppConfig.UsernameIak
 	payload.Sign = sign(strconv.Itoa(payload.TrID))
@@ -113,7 +118,7 @@ func (*iakApiRepository) BpjsPayRepository(payload *model.BpjsPayBody) (*model.B
 	return &response, nil
 }
 
-func (*iakApiRepository) BpjsCheckRepository(payload *model.BpjsPayBody) (*model.BpjsIAKResponse, error) {
+func (*iakApiRepository) BpjsCheckRepository(payload *model.IakPayBody) (*model.BpjsIAKResponse, error) {
 	payload.Commands = "checkstatus"
 	payload.Username = config.AppConfig.UsernameIak
 	payload.Sign = sign("cs")
@@ -136,18 +141,93 @@ func (*iakApiRepository) BpjsCheckRepository(payload *model.BpjsPayBody) (*model
 		panic(err)
 	}
 
-	// body, err := ioutil.ReadAll(resp.Body)
+	fmt.Printf("response1: %+v\n", response)
 
-	// fmt.Printf("response14: %+v\n", resp)
+	return &response, nil
+}
 
-	// if err != nil {
-	// 	return nil, errors.New("error reading response body")
-	// }
+func (*iakApiRepository) ElectricityBillInquiryRepository(payload *model.IakInquiryBody) (*model.IakPostPaidResponse, error) {
+	payload.Commands = "inq-pasca"
+	payload.Code = "PLNPOSTPAID"
+	payload.RefID = uuid.New().String()
+	payload.Username = config.AppConfig.UsernameIak
+	payload.Sign = sign(payload.RefID)
 
-	// var response model.BpjsIAKResponse
-	// if err := json.Unmarshal(body, &response); err != nil {
-	// 	return nil, fmt.Errorf("error parsing response body: %w", err)
-	// }
+	resp, err := doRequestIak(http.MethodPost, config.AppConfig.BaseUrlIakPostPaid+"/api/v1/bill/check", payload)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, errors.New("error reading response body")
+	}
+
+	var response model.IakPostPaidResponse
+	if err := json.Unmarshal(body, &response); err != nil {
+		return nil, fmt.Errorf("error parsing response body: %w", err)
+	}
+
+	if response.Data.Message != "INQUIRY SUCCESS" {
+		return nil, fmt.Errorf(response.Data.Message)
+	}
+
+	return &response, nil
+}
+func (*iakApiRepository) ElectricityBillPayRepository(payload *model.IakPayBody) (*model.IakPostPaidResponse, error) {
+	payload.Commands = "pay-pasca"
+	payload.Username = config.AppConfig.UsernameIak
+	payload.Sign = sign(strconv.Itoa(payload.TrID))
+
+	resp, err := doRequestIak(http.MethodPost, config.AppConfig.BaseUrlIakPostPaid+"/api/v1/bill/check", payload)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, errors.New("error reading response body")
+	}
+
+	var response model.IakPostPaidResponse
+	if err := json.Unmarshal(body, &response); err != nil {
+		return nil, fmt.Errorf("error parsing response body: %w", err)
+	}
+
+	if response.Data.Message != "PAYMENT SUCCESS" {
+		return nil, fmt.Errorf(response.Data.Message)
+	}
+
+	return &response, nil
+}
+func (*iakApiRepository) ElectricityBillCheckRepository(payload *model.IakPayBody) (*model.IakPostPaidResponse, error) {
+	payload.Commands = "checkstatus"
+	payload.Username = config.AppConfig.UsernameIak
+	payload.Sign = sign("cs")
+
+	fmt.Printf("response123123: %+v\n", payload)
+
+	resp, err := doRequestIak(http.MethodPost, config.AppConfig.BaseUrlIakPostPaid+"/api/v1/bill/check", payload)
+
+	fmt.Printf("response0: %+v\n", resp)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	var response model.IakPostPaidResponse
+	err = json.NewDecoder(resp.Body).Decode(&response)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Printf("response1: %+v\n", response)
 

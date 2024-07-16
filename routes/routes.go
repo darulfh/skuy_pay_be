@@ -81,7 +81,7 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 
 	// ELECTRICITY
 	electricityRepository := repository.NewElectricityRepository(db)
-	electricityUseCase := electricity.NewElectricityUseCase(electricityRepository, userRepository, discountRepository, transactionRepository, billerRepository)
+	electricityUseCase := electricity.NewElectricityUseCase(electricityRepository, userRepository, discountRepository, transactionRepository, billerRepository, iakRepository)
 	electricityController := controller.NewElectricityController(electricityUseCase)
 
 	// e.GET("/", func(c echo.Context) error {

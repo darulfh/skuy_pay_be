@@ -260,7 +260,7 @@ func (ctrl *insuranceController) BpjsInquiryIakUseCase(c echo.Context) error {
 		})
 	}
 
-	var payload model.BpjsInquiryBody
+	var payload model.IakInquiryBody
 
 	err := c.Bind(&payload)
 	if err != nil {
@@ -273,13 +273,7 @@ func (ctrl *insuranceController) BpjsInquiryIakUseCase(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.JSON(http.StatusAccepted, response)
-	// 	model.HttpResponse{
-	// 	MetaData: model.MetaData{
-	// 		StatusCode: http.StatusAccepted,
-	// 		Message:    "Succesfully pay bill",
-	// 	},
-	// 	Data: response,
-	// })
+
 }
 func (ctrl *insuranceController) BpjsPayIakUseCase(c echo.Context) error {
 	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
@@ -290,7 +284,7 @@ func (ctrl *insuranceController) BpjsPayIakUseCase(c echo.Context) error {
 		})
 	}
 
-	var payload model.BpjsPayBody
+	var payload model.IakPayBody
 
 	err := c.Bind(&payload)
 	if err != nil {
@@ -302,11 +296,5 @@ func (ctrl *insuranceController) BpjsPayIakUseCase(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.JSON(http.StatusAccepted, response)
-	// model.HttpResponse{
-	// MetaData: model.MetaData{
-	// 	StatusCode: http.StatusAccepted,
-	// 	Message:    "Succesfully pay bill",
-	// },
-	// Data: response,
-	// })
+
 }

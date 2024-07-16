@@ -20,6 +20,9 @@ type ElectricityController interface {
 	BillInquiryElectricityController(c echo.Context) error
 	PayBillInquiryElectricityController(c echo.Context) error
 	BuyBillInquiryElectricityController(c echo.Context) error
+
+	ElectricityBillInquiryIakUseCase(c echo.Context) error
+	ElectricityBillPayIakUseCase(c echo.Context) error
 }
 
 type electricityController struct {
@@ -274,4 +277,52 @@ func (ctrl *electricityController) BillInquiryPrePaidElectricityController(c ech
 		},
 		Data: response,
 	})
+}
+
+func (ctrl *electricityController) ElectricityBillInquiryIakUseCase(c echo.Context) error {
+	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
+	if userId == "" {
+		return c.JSON(http.StatusUnauthorized, model.ErrorResponse{
+			StatusCode: http.StatusUnauthorized,
+			Message:    "token unauthorized",
+		})
+	}
+
+	var payload model.IakInquiryBody
+
+	err := c.Bind(&payload)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	response, err := ctrl.electricityUseCase.ElectricityBillInquiryIakUseCase(&payload)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusAccepted, response)
+}
+
+func (ctrl *electricityController) ElectricityBillPayIakUseCase(c echo.Context) error {
+	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
+	if userId == "" {
+		return c.JSON(http.StatusUnauthorized, model.ErrorResponse{
+			StatusCode: http.StatusUnauthorized,
+			Message:    "token unauthorized",
+		})
+	}
+
+	var payload model.IakPayBody
+
+	err := c.Bind(&payload)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	response, err := ctrl.electricityUseCase.ElectricityBillPayIakUseCase(&payload, userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusAccepted, response)
+
 }

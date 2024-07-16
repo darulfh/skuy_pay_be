@@ -23,6 +23,9 @@ type ElectricityUseCase interface {
 	PostPayBillElectricityUseCase(userId string, payload *model.OyBillerApi) (*model.Transaction, error)
 	PreBillInquiryElectricityUseCase(userId string, payload *model.OyBillerApi) (*model.Transaction, error)
 	BillElectricityStatusUseCase(payload *model.OyBillerApi) (*model.OyBillerApiResponse, error)
+
+	ElectricityBillInquiryIakUseCase(payload *model.IakInquiryBody) (*model.IakPostPaidResponse, error)
+	ElectricityBillPayIakUseCase(payload *model.IakPayBody, userId string) (*model.IakPostPaidResponse, error)
 }
 
 type electricityUseCase struct {
@@ -31,10 +34,11 @@ type electricityUseCase struct {
 	discountRepository    repository.DiscountRepository
 	transactionRepository repository.TransactionRepository
 	billerOyApi           repository.BillerOyApiRepository
+	iakRepository         repository.IakApiRepository
 }
 
-func NewElectricityUseCase(electricityRepository repository.ElectricityRepository, userRepository repository.UserRepository, discountRepository repository.DiscountRepository, transactionRepository repository.TransactionRepository, billerOyApiRepository repository.BillerOyApiRepository) *electricityUseCase {
-	return &electricityUseCase{electricityRepository: electricityRepository, userRepository: userRepository, discountRepository: discountRepository, transactionRepository: transactionRepository, billerOyApi: billerOyApiRepository}
+func NewElectricityUseCase(electricityRepository repository.ElectricityRepository, userRepository repository.UserRepository, discountRepository repository.DiscountRepository, transactionRepository repository.TransactionRepository, billerOyApiRepository repository.BillerOyApiRepository, iakRepository repository.IakApiRepository) *electricityUseCase {
+	return &electricityUseCase{electricityRepository: electricityRepository, userRepository: userRepository, discountRepository: discountRepository, transactionRepository: transactionRepository, billerOyApi: billerOyApiRepository, iakRepository: iakRepository}
 }
 
 func (uc *electricityUseCase) CreateElectricityUseCase(payload *model.Electricity) (*model.Electricity, error) {
@@ -352,6 +356,76 @@ func (uc *electricityUseCase) BillElectricityStatusUseCase(payload *model.OyBill
 	electricity, err := uc.billerOyApi.BillInquryRepository(payload)
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve electricity: %v", err)
+	}
+
+	return electricity, nil
+}
+
+func (uc *electricityUseCase) ElectricityBillInquiryIakUseCase(payload *model.IakInquiryBody) (*model.IakPostPaidResponse, error) {
+	electricity, err := uc.iakRepository.ElectricityBillInquiryRepository(payload)
+
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	return electricity, nil
+
+}
+func (uc *electricityUseCase) ElectricityBillPayIakUseCase(payload *model.IakPayBody, userId string) (*model.IakPostPaidResponse, error) {
+	electricityCheck, err := uc.iakRepository.ElectricityBillCheckRepository(payload)
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	payload.TrID = electricityCheck.Data.TrID
+
+	totalPrice := float64(electricityCheck.Data.Price)
+
+	fmt.Printf("totalPrice = %f \n", totalPrice)
+
+	user, err := uc.userRepository.GetUserByIDRepository(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.Amount < totalPrice {
+		return nil, errors.New("your balance is not enough")
+	}
+
+	electricity, err := uc.iakRepository.ElectricityBillPayRepository(payload)
+
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	transaction := &model.Transaction{
+		ID:            electricity.Data.RefID,
+		UserID:        userId,
+		Status:        model.STATUS_SUCCESSFUL,
+		ProductType:   "ELECTRICITY_BILL",
+		DiscountPrice: 0,
+		AdminFee:      float64(electricity.Data.Admin),
+		Description:   fmt.Sprintf("Pembayaran Tagihan asuransi %s ", electricity.Data.Period),
+		Price:         float64(electricity.Data.Nominal),
+		TotalPrice:    totalPrice,
+		ProductDetail: electricity.Data,
+	}
+
+	_, err = uc.transactionRepository.CreateTransactionByUserIdRepository(transaction)
+	if err != nil {
+		return nil, fmt.Errorf("error creating insurance in database: %w", err)
+	}
+
+	fmt.Printf("user.Amount1 = %f \n", user.Amount)
+	fmt.Printf("transaction.TotalPrice = %f \n", transaction.TotalPrice)
+
+	user.Amount -= transaction.TotalPrice
+
+	fmt.Printf("user.Amount2 = %f \n", user.Amount)
+
+	_, err = uc.userRepository.UpdateUserAmountByIDRepository(userId, user)
+	if err != nil {
+		return nil, err
 	}
 
 	return electricity, nil
