@@ -222,6 +222,9 @@ func Routes(e *echo.Echo, db *gorm.DB) {
 	// Electricity PrePaid (Token)
 	all.POST("/electricity/prepaid/inquiry", electricityController.BillInquiryPrePaidElectricityController)
 
+	all.POST("/electricitybill/pay", electricityController.ElectricityBillPayIakUseCase)
+	all.POST("/electricitybill/inquiry", electricityController.ElectricityBillInquiryIakUseCase)
+
 	// PDAM
 	all.GET("/pdams", pdamController.GetAllPdamController)
 	all.GET("/pdam/:id", pdamController.GetPdamByIdController)

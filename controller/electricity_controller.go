@@ -324,5 +324,4 @@ func (ctrl *electricityController) ElectricityBillPayIakUseCase(c echo.Context) 
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.JSON(http.StatusAccepted, response)
-
 }
