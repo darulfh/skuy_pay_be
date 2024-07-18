@@ -257,6 +257,11 @@ func (*iakApiRepository) ElectricityTokenInquiryRepository(payload *model.PrePai
 		return nil, fmt.Errorf("error parsing response body: %w", err)
 	}
 
+	if response.Data.Message != "SUCCESS" {
+		return nil, fmt.Errorf(response.Data.Message)
+
+	}
+
 	return &response, nil
 
 }
