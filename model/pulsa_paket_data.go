@@ -25,7 +25,7 @@ type PPDResponse struct {
 	Description string  `json:"description"`
 }
 
-type PPDIakRequest struct {
+type PrePaidIakBody struct {
 	// username IAK
 	Username string `json:"username"`
 
@@ -42,7 +42,7 @@ type PPDIakRequest struct {
 	Sign string `json:"sign"`
 }
 
-type PPDIakResponse struct {
+type PrePaidIakResponse struct {
 	Data struct {
 		RefID       string `json:"ref_id"`
 		Status      int    `json:"status"`

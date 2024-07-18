@@ -11,6 +11,7 @@ import (
 
 	"github.com/darulfh/skuy_pay_be/model"
 	"github.com/darulfh/skuy_pay_be/repository"
+	"github.com/google/uuid"
 )
 
 type ElectricityUseCase interface {
@@ -26,6 +27,9 @@ type ElectricityUseCase interface {
 
 	ElectricityBillInquiryIakUseCase(payload *model.IakInquiryBody) (*model.IakPostPaidResponse, error)
 	ElectricityBillPayIakUseCase(payload *model.IakPayBody, userId string) (*model.IakPostPaidResponse, error)
+
+	ElectricityTokenInquiryIakUseCase(payload *model.PrePaidIakBody) (*model.IakElectricityTokenInquiry, error)
+	ElectricityTokenPayIakUseCase(payload *model.PrePaidIakBody, userId string) (*model.PrePaidIakResponse, error)
 }
 
 type electricityUseCase struct {
@@ -431,6 +435,75 @@ func (uc *electricityUseCase) ElectricityBillPayIakUseCase(payload *model.IakPay
 	return electricity, nil
 }
 
+func (uc *electricityUseCase) ElectricityTokenInquiryIakUseCase(payload *model.PrePaidIakBody) (*model.IakElectricityTokenInquiry, error) {
+	electricity, err := uc.iakRepository.ElectricityTokenInquiryRepository(payload)
+
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	return electricity, nil
+
+}
+func (uc *electricityUseCase) ElectricityTokenPayIakUseCase(payload *model.PrePaidIakBody, userId string) (*model.PrePaidIakResponse, error) {
+	payload.RefID = uuid.New().String()
+	electricity, err := uc.iakRepository.ElectricityTokenInquiryRepository(payload)
+
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	totalPrice := totalPriceToken(payload.ProductCode)
+
+	user, err := uc.userRepository.GetUserByIDRepository(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.Amount < totalPrice {
+		return nil, errors.New("your balance is not enough")
+	}
+
+	pay, err := uc.iakRepository.IakTopUpPayRepository(payload)
+
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	transaction := &model.Transaction{
+		ID:            payload.RefID,
+		UserID:        userId,
+		Status:        model.STATUS_SUCCESSFUL,
+		ProductType:   "ELECTRICITY_TOKEN",
+		DiscountPrice: 0,
+		AdminFee:      float64(500),
+		Description:   fmt.Sprintf("Pembayaran Token Listrik code %s ", payload.ProductCode),
+		Price:         float64(500),
+		TotalPrice:    totalPrice,
+		ProductDetail: electricity.Data,
+	}
+
+	_, err = uc.transactionRepository.CreateTransactionByUserIdRepository(transaction)
+	if err != nil {
+		return nil, fmt.Errorf("error creating insurance in database: %w", err)
+	}
+
+	fmt.Printf("user.Amount1 = %f \n", user.Amount)
+	fmt.Printf("transaction.TotalPrice = %f \n", transaction.TotalPrice)
+
+	user.Amount -= transaction.TotalPrice
+
+	fmt.Printf("user.Amount2 = %f \n", user.Amount)
+
+	_, err = uc.userRepository.UpdateUserAmountByIDRepository(userId, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return pay, nil
+
+}
+
 func generateVANumber(length int) string {
 	charset := "0123456789"
 	rand.Seed(time.Now().Unix())
@@ -457,4 +530,21 @@ func calculatePricePower(power, amount int) float64 {
 	}
 
 	return float64(amount) * totalPrice
+}
+
+func totalPriceToken(code string) float64 {
+	switch code {
+	case "hpln20000":
+		return 21000
+	case "hpln50000":
+		return 51000
+	case "hpln100000":
+		return 101000
+	case "hpln200000":
+		return 201000
+	case "hpln500000":
+		return 501000
+	default:
+		return 0
+	}
 }

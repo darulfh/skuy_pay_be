@@ -44,3 +44,16 @@ type IakPostPaidResponse struct {
 	} `json:"data"`
 	Meta []interface{} `json:"meta"`
 }
+
+type IakElectricityTokenInquiry struct {
+	Data struct {
+		Status       string `json:"status"`
+		CustomerID   string `json:"customer_id"`
+		MeterNo      string `json:"meter_no"`
+		SubscriberID string `json:"subscriber_id"`
+		Name         string `json:"name"`
+		SegmentPower string `json:"segment_power"`
+		Message      string `json:"message"`
+		Rc           string `json:"rc"`
+	} `json:"data"`
+}

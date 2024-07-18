@@ -23,6 +23,9 @@ type ElectricityController interface {
 
 	ElectricityBillInquiryIakUseCase(c echo.Context) error
 	ElectricityBillPayIakUseCase(c echo.Context) error
+
+	ElectricityTokenInquiryIakUseCase(c echo.Context) error
+	ElectricityTokenPayIakUseCase(c echo.Context) error
 }
 
 type electricityController struct {
@@ -320,6 +323,54 @@ func (ctrl *electricityController) ElectricityBillPayIakUseCase(c echo.Context) 
 	}
 
 	response, err := ctrl.electricityUseCase.ElectricityBillPayIakUseCase(&payload, userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusAccepted, response)
+}
+
+func (ctrl *electricityController) ElectricityTokenInquiryIakUseCase(c echo.Context) error {
+	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
+	if userId == "" {
+		return c.JSON(http.StatusUnauthorized, model.ErrorResponse{
+			StatusCode: http.StatusUnauthorized,
+			Message:    "token unauthorized",
+		})
+	}
+
+	var payload model.PrePaidIakBody
+
+	err := c.Bind(&payload)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	response, err := ctrl.electricityUseCase.ElectricityTokenInquiryIakUseCase(&payload)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusAccepted, response)
+}
+
+func (ctrl *electricityController) ElectricityTokenPayIakUseCase(c echo.Context) error {
+	userId := middlewares.ExtractTokenUserId(model.ALL_TYPE, c)
+	if userId == "" {
+		return c.JSON(http.StatusUnauthorized, model.ErrorResponse{
+			StatusCode: http.StatusUnauthorized,
+			Message:    "token unauthorized",
+		})
+	}
+
+	var payload model.PrePaidIakBody
+
+	err := c.Bind(&payload)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	response, err := ctrl.electricityUseCase.ElectricityTokenPayIakUseCase(&payload, userId)
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}

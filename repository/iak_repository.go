@@ -15,7 +15,7 @@ import (
 )
 
 type IakApiRepository interface {
-	PPDIakRepository(payload *model.PPDIakRequest) (*model.PPDIakResponse, error)
+	IakTopUpPayRepository(payload *model.PrePaidIakBody) (*model.PrePaidIakResponse, error)
 
 	BpjsInquiryRepository(payload *model.IakInquiryBody) (*model.BpjsIAKResponse, error)
 	BpjsPayRepository(payload *model.IakPayBody) (*model.BpjsIAKResponse, error)
@@ -24,6 +24,8 @@ type IakApiRepository interface {
 	ElectricityBillInquiryRepository(payload *model.IakInquiryBody) (*model.IakPostPaidResponse, error)
 	ElectricityBillPayRepository(payload *model.IakPayBody) (*model.IakPostPaidResponse, error)
 	ElectricityBillCheckRepository(payload *model.IakPayBody) (*model.IakPostPaidResponse, error)
+
+	ElectricityTokenInquiryRepository(payload *model.PrePaidIakBody) (*model.IakElectricityTokenInquiry, error)
 }
 
 type iakApiRepository struct{}
@@ -32,7 +34,7 @@ func NewIakApiRepository() IakApiRepository {
 	return &iakApiRepository{}
 }
 
-func (*iakApiRepository) PPDIakRepository(payload *model.PPDIakRequest) (*model.PPDIakResponse, error) {
+func (*iakApiRepository) IakTopUpPayRepository(payload *model.PrePaidIakBody) (*model.PrePaidIakResponse, error) {
 
 	payload.Sign = sign(payload.RefID)
 
@@ -48,7 +50,7 @@ func (*iakApiRepository) PPDIakRepository(payload *model.PPDIakRequest) (*model.
 		return nil, errors.New("error reading response body")
 	}
 
-	var response model.PPDIakResponse
+	var response model.PrePaidIakResponse
 	if err := json.Unmarshal(body, &response); err != nil {
 		return nil, fmt.Errorf("error parsing response body: %w", err)
 	}
@@ -232,6 +234,31 @@ func (*iakApiRepository) ElectricityBillCheckRepository(payload *model.IakPayBod
 	fmt.Printf("response1: %+v\n", response)
 
 	return &response, nil
+}
+
+func (*iakApiRepository) ElectricityTokenInquiryRepository(payload *model.PrePaidIakBody) (*model.IakElectricityTokenInquiry, error) {
+	payload.Username = config.AppConfig.UsernameIak
+	payload.Sign = sign(payload.CustomerID)
+
+	resp, err := doRequestIak(http.MethodPost, "https://prepaid.iak.dev/api/inquiry-pln", payload)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, errors.New("error reading response body")
+	}
+
+	var response model.IakElectricityTokenInquiry
+	if err := json.Unmarshal(body, &response); err != nil {
+		return nil, fmt.Errorf("error parsing response body: %w", err)
+	}
+
+	return &response, nil
+
 }
 
 func sign(id string) string {

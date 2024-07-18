@@ -177,7 +177,7 @@ func (uc *pulsaPaketDataUsecase) CreateTransactionPPD(userID string, payload dto
 		return &model.Transaction{}, errors.New("your balance is not enough")
 	}
 
-	iakReq := model.PPDIakRequest{
+	iakReq := model.PrePaidIakBody{
 		Username:    config.AppConfig.UsernameIak,
 		CustomerID:  payload.PhoneNumber,
 		ProductCode: ppd.Code,
@@ -186,7 +186,7 @@ func (uc *pulsaPaketDataUsecase) CreateTransactionPPD(userID string, payload dto
 
 	fmt.Printf("%+v\n", iakReq)
 
-	iakResp, err := uc.iakRepository.PPDIakRepository(&iakReq)
+	iakResp, err := uc.iakRepository.IakTopUpPayRepository(&iakReq)
 
 	fmt.Printf("%+v\n", iakResp)
 
