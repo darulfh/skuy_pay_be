@@ -245,6 +245,7 @@ func (*iakApiRepository) ElectricityTokenInquiryRepository(payload *model.PrePai
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
