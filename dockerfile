@@ -1,4 +1,4 @@
-FROM golang:1.22.1
+FROM golang:1.22
 
 WORKDIR /app
 
@@ -7,13 +7,16 @@ RUN go mod download
 
 COPY . /app
 
-RUN go build -o main .
+RUN go build -o server .
+
+# FROM scratch
+# COPY --from=build /server /server
 
 ENV PORT=2424
 
 EXPOSE 2424
 
-CMD ["/main"]
+CMD ["./server"]
 
 # FROM golang:1.22 as build
 # WORKDIR /app
@@ -22,5 +25,5 @@ CMD ["/main"]
 
 # FROM scratch
 # COPY --from=build /server /server
-# EXPOSE 3000
+# EXPOSE 2424
 # CMD ["/server"]
