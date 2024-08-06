@@ -3,18 +3,18 @@ volumes:
   db:
     driver: local
 services:
-  postgresdb:
-    image: postgres:16-alpine
-    restart: always
-    container_name: ppob-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ZfcnO9WYdcbNqvRtwH4WrA99nSax2t8yBdASIoNzKCNeIs8hXI8xy7lQWrD4DeyP
-      POSTGRES_DB: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - db:/var/lib/postgresql/data
+  # postgresdb:
+  #   image: postgres:16-alpine
+  #   restart: always
+  #   container_name: ppob-db
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: ZfcnO9WYdcbNqvRtwH4WrA99nSax2t8yBdASIoNzKCNeIs8hXI8xy7lQWrD4DeyP
+  #     POSTGRES_DB: postgres
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - db:/var/lib/postgresql/data
 
   app:
     build:
