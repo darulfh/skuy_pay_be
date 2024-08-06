@@ -1,19 +1,19 @@
-FROM golang:1.22
+# FROM golang:1.22
 
-WORKDIR /app
+# WORKDIR /app
 
-COPY go.mod go.sum ./
-RUN go mod download
+# COPY go.mod go.sum ./
+# RUN go mod download
 
-COPY . /app
+# COPY . /app
 
-RUN go build -o server .
+# RUN go build -o server .
 
-ENV PORT=2424
+# ENV PORT=2424
 
-EXPOSE 2424
+# EXPOSE 2424
 
-CMD ["./server"]
+# CMD ["./server"]
 
 # FROM golang:1.22 as build
 # WORKDIR /app
@@ -26,34 +26,34 @@ CMD ["./server"]
 # CMD ["/server"]
 
 
-# # Build stage
-# FROM golang:1.22 AS build
+# Build stage
+FROM golang:1.22 AS build
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY go.mod go.sum ./
-# RUN go mod download
+COPY go.mod go.sum ./
+RUN go mod download
 
-# COPY . .
+COPY . .
 
-# RUN CGO_ENABLED=0 GOOS=linux go build -o coolify .
+RUN CGO_ENABLED=0 GOOS=linux go build -o coolify .
 
-# # Cache stage
-# FROM alpine:latest AS cache
+# Cache stage
+FROM alpine:latest AS cache
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY --from=build /app/coolify .
+COPY --from=build /app/coolify .
 
-# # Final stage
-# FROM alpine:latest
+# Final stage
+FROM alpine:latest
 
-# WORKDIR /app
+WORKDIR /app
 
-# RUN apk --no-cache add ca-certificates curl
+RUN apk --no-cache add ca-certificates curl
 
-# COPY --from=cache /app/coolify .
+COPY --from=cache /app/coolify .
 
-# EXPOSE 2424
+EXPOSE 2424
 
-# CMD ["./coolify"]
+CMD ["./coolify"]
